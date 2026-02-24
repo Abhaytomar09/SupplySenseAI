@@ -10,6 +10,10 @@ services:
         value: "https://supplysenseai-backend.onrender.com"
       - key: VITE_ML_API_URL
         value: "https://supplysenseai-ml.onrender.com"
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
 
   # 2. Backend (Node.js/Express)
   - type: web
