@@ -20,9 +20,8 @@ const Supplier = require("../models/Supplier");
 const Material = require("../models/Material");
 const Order = require("../models/Order");
 
-const DB_URI =
-  process.env.MONGODB_URI ||
-  "***REMOVED***/supplysense?retryWrites=true&w=majority";
+const MONGODB_URI =
+  process.env.MONGO_URI || "mongodb://localhost:27017/supplysenseai";
 
 // ─────────────────────────────────────────────────────────────────────────────
 // SUPPLIER DATA

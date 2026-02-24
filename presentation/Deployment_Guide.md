@@ -7,6 +7,7 @@ This guide provides comprehensive instructions for deploying SupplySenseAI in va
 ## Prerequisites
 
 ### System Requirements
+
 - **Node.js**: Version 18.0 or higher
 - **Python**: Version 3.8 or higher
 - **MongoDB**: Version 5.0 or higher (or MongoDB Atlas)
@@ -14,6 +15,7 @@ This guide provides comprehensive instructions for deploying SupplySenseAI in va
 - **Git**: Version 2.0 or higher
 
 ### Hardware Requirements
+
 - **RAM**: Minimum 4GB, Recommended 8GB+
 - **CPU**: 2 cores minimum, 4 cores recommended
 - **Storage**: 10GB free space
@@ -22,6 +24,7 @@ This guide provides comprehensive instructions for deploying SupplySenseAI in va
 ## Environment Setup
 
 ### 1. Clone Repository
+
 ```bash
 git clone https://github.com/your-username/supplysenseai.git
 cd supplysenseai
@@ -30,6 +33,7 @@ cd supplysenseai
 ### 2. Environment Configuration
 
 #### Backend Environment Variables
+
 Create `.env` file in the `backend` directory:
 
 ```env
@@ -57,6 +61,7 @@ ML_SERVICE_URL=http://localhost:5001
 ```
 
 #### Frontend Environment Variables
+
 Create `.env` file in the `frontend` directory:
 
 ```env
@@ -66,6 +71,7 @@ VITE_APP_VERSION=1.0.0
 ```
 
 #### ML Service Environment Variables
+
 Create `.env` file in the `ml_service` directory:
 
 ```env
@@ -81,24 +87,28 @@ PORT=5001
 #### 1. Install Dependencies
 
 **Backend:**
+
 ```bash
 cd backend
 npm install
 ```
 
 **Frontend:**
+
 ```bash
 cd ../frontend
 npm install
 ```
 
 **ML Service:**
+
 ```bash
 cd ../ml_service
 pip install -r requirements.txt
 ```
 
 #### 2. Start MongoDB
+
 ```bash
 # Using local MongoDB
 mongod
@@ -110,24 +120,28 @@ docker run -d -p 27017:27017 --name mongodb mongo:latest
 #### 3. Start Services
 
 **Terminal 1 - Backend:**
+
 ```bash
 cd backend
 npm run dev
 ```
 
 **Terminal 2 - Frontend:**
+
 ```bash
 cd frontend
 npm run dev
 ```
 
 **Terminal 3 - ML Service:**
+
 ```bash
 cd ml_service
 python app.py
 ```
 
 #### 4. Access Application
+
 - Frontend: http://localhost:5173
 - Backend API: http://localhost:5000
 - ML Service: http://localhost:5001
@@ -135,8 +149,9 @@ python app.py
 ### Method 2: Docker Compose (Recommended)
 
 #### 1. Create docker-compose.yml
+
 ```yaml
-version: '3.8'
+version: "3.8"
 
 services:
   mongodb:
@@ -198,6 +213,7 @@ volumes:
 #### 2. Create Dockerfiles
 
 **backend/Dockerfile:**
+
 ```dockerfile
 FROM node:18-alpine
 
@@ -214,6 +230,7 @@ CMD ["npm", "start"]
 ```
 
 **frontend/Dockerfile:**
+
 ```dockerfile
 FROM node:18-alpine
 
@@ -230,6 +247,7 @@ CMD ["npm", "run", "dev"]
 ```
 
 **ml_service/Dockerfile:**
+
 ```dockerfile
 FROM python:3.9-slim
 
@@ -246,6 +264,7 @@ CMD ["python", "app.py"]
 ```
 
 #### 3. Start Services
+
 ```bash
 docker-compose up -d
 ```
@@ -255,18 +274,19 @@ docker-compose up -d
 ### 1. Production Environment Setup
 
 #### Environment Variables for Production
+
 ```env
 # Production Backend .env
 NODE_ENV=production
 PORT=5000
-MONGODB_URI=***REMOVED***/supplysenseai
-JWT_SECRET=your_production_jwt_secret_key_minimum_32_characters
+MONGODB_URI=mongodb+srv://<username>:<password>@cluster.mongodb.net/supplysenseait_key_minimum_32_characters
 JWT_EXPIRE=24h
 FRONTEND_URL=https://yourdomain.com
 ML_SERVICE_URL=http://ml-service:5001
 ```
 
 #### SSL Configuration
+
 ```nginx
 # nginx.conf for SSL termination
 server {
@@ -293,8 +313,9 @@ server {
 ### 2. Production Docker Deployment
 
 #### Production Docker Compose
+
 ```yaml
-version: '3.8'
+version: "3.8"
 
 services:
   mongodb:
@@ -370,6 +391,7 @@ networks:
 #### Production Dockerfiles
 
 **backend/Dockerfile.prod:**
+
 ```dockerfile
 FROM node:18-alpine
 
@@ -398,6 +420,7 @@ CMD ["npm", "start"]
 ```
 
 **frontend/Dockerfile.prod:**
+
 ```dockerfile
 FROM node:18-alpine AS builder
 
@@ -425,6 +448,7 @@ CMD ["nginx", "-g", "daemon off;"]
 ### 3. Cloud Deployment Options
 
 #### AWS Deployment
+
 ```bash
 # Using AWS ECS
 aws ecs create-cluster --cluster-name supplysenseai
@@ -437,6 +461,7 @@ aws ecs run-task \
 ```
 
 #### Heroku Deployment
+
 ```bash
 # Backend deployment
 heroku create supplysenseai-backend
@@ -448,6 +473,7 @@ heroku create supplysenseai-frontend --buildpack heroku/static
 ```
 
 #### Vercel Deployment (Frontend)
+
 ```bash
 # Install Vercel CLI
 npm i -g vercel
@@ -460,6 +486,7 @@ vercel --prod
 ## Database Setup
 
 ### MongoDB Atlas Setup
+
 1. Create MongoDB Atlas account
 2. Create new cluster
 3. Create database user
@@ -467,6 +494,7 @@ vercel --prod
 5. Get connection string
 
 ### Database Initialization
+
 ```javascript
 // Run in MongoDB shell or create seed script
 use supplysenseai;
@@ -489,6 +517,7 @@ db.forecasts.createIndex({ "createdBy": 1 });
 ## Monitoring and Maintenance
 
 ### Health Checks
+
 ```bash
 # API Health Check
 curl https://yourdomain.com/api/health
@@ -498,6 +527,7 @@ curl http://localhost:5001/health
 ```
 
 ### Log Monitoring
+
 ```bash
 # View application logs
 docker-compose logs -f backend
@@ -507,6 +537,7 @@ docker-compose logs -f ml-service
 ```
 
 ### Backup Strategy
+
 ```bash
 # Database backup
 mongodump --db supplysenseai --out /backup/$(date +%Y%m%d)
@@ -519,6 +550,7 @@ find /backup -name "supplysenseai_*" -mtime +7 -delete
 ```
 
 ### Performance Monitoring
+
 ```bash
 # Install PM2 for production
 npm install -g pm2
@@ -533,6 +565,7 @@ pm2 monit
 ## Security Configuration
 
 ### SSL/TLS Setup
+
 ```bash
 # Generate SSL certificate
 certbot certonly --webroot -w /var/www/html -d yourdomain.com
@@ -542,6 +575,7 @@ certbot renew --dry-run
 ```
 
 ### Firewall Configuration
+
 ```bash
 # UFW firewall rules
 ufw allow 22/tcp
@@ -551,6 +585,7 @@ ufw enable
 ```
 
 ### Environment Security
+
 ```bash
 # Secure environment variables
 chmod 600 .env
@@ -565,6 +600,7 @@ export JWT_SECRET=$(openssl rand -hex 32)
 ### Common Issues
 
 #### Database Connection Issues
+
 ```bash
 # Check MongoDB status
 docker ps | grep mongodb
@@ -574,6 +610,7 @@ mongo mongodb://localhost:27017/supplysenseai
 ```
 
 #### Port Conflicts
+
 ```bash
 # Check port usage
 netstat -tulpn | grep :5000
@@ -583,6 +620,7 @@ kill -9 $(lsof -t -i:5000)
 ```
 
 #### Memory Issues
+
 ```bash
 # Check memory usage
 docker stats
@@ -592,6 +630,7 @@ docker stats
 ```
 
 #### Build Failures
+
 ```bash
 # Clear Docker cache
 docker system prune -a
@@ -603,6 +642,7 @@ docker-compose build --no-cache
 ## Scaling Considerations
 
 ### Horizontal Scaling
+
 ```yaml
 # Multiple backend instances
 services:
@@ -612,20 +652,23 @@ services:
 ```
 
 ### Database Scaling
+
 - Implement read replicas
 - Use database sharding
 - Implement connection pooling
 
 ### CDN Integration
+
 ```javascript
 // CloudFront distribution for static assets
-const AWS = require('aws-sdk');
+const AWS = require("aws-sdk");
 const cloudfront = new AWS.CloudFront();
 ```
 
 ## Backup and Recovery
 
 ### Automated Backups
+
 ```bash
 # Daily backup script
 #!/bin/bash
@@ -644,6 +687,7 @@ find $BACKUP_DIR -name "app_*" -mtime +30 -delete
 ```
 
 ### Disaster Recovery
+
 1. **Regular Backups**: Daily automated backups
 2. **Off-site Storage**: Cloud storage for backups
 3. **Recovery Testing**: Monthly recovery drills

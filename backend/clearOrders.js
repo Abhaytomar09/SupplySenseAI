@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 
 async function clearOrders() {
   await mongoose.connect(
-    "***REMOVED***/supplysense?retryWrites=true&w=majority",
+    process.env.MONGO_URI || "mongodb://localhost:27017/supplysenseai",
     {
       useNewUrlParser: true,
       useUnifiedTopology: true,
