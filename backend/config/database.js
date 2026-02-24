@@ -4,7 +4,9 @@ const connectDB = async () => {
   try {
     // Use local MongoDB for testing
     const mongoURI =
-      process.env.MONGODB_URI || "mongodb://localhost:27017/supplysenseai";
+      process.env.MONGODB_URI ||
+      process.env.MONGO_URI ||
+      "mongodb://localhost:27017/supplysenseai";
 
     const conn = await mongoose.connect(mongoURI);
 
