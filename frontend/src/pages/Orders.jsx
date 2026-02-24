@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
-import axios from "axios";
 import api from "../utils/api";
 import { formatDate } from "../utils/dateUtils";
 
@@ -142,7 +141,7 @@ const Orders = () => {
       const token = localStorage.getItem("token");
       const config = { headers: { Authorization: `Bearer ${token}` } };
 
-      await axios.post(
+      await api.post(
         "/orders",
         {
           ...formData,
@@ -172,7 +171,7 @@ const Orders = () => {
       const token = localStorage.getItem("token");
       const config = { headers: { Authorization: `Bearer ${token}` } };
 
-      await axios.put(
+      await api.put(
         `/orders/${selectedOrder._id}/status`,
         { status: "Received" },
         config,
@@ -192,7 +191,7 @@ const Orders = () => {
       const token = localStorage.getItem("token");
       const config = { headers: { Authorization: `Bearer ${token}` } };
 
-      await axios.put(
+      await api.put(
         `/orders/${orderId}/status`,
         // Status can be advanced from Pending -> Ordered by Manager/Admin
         { status: "Ordered" },
