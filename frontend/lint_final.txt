@@ -1,0 +1,56 @@
+
+> vite-react-app@0.0.0 lint
+> eslint .
+
+
+C:\Users\abhay\OneDrive\Desktop\SupplySenseAI\SupplySenseAI\frontend\src\pages\Forecasting.jsx
+  1:28  error  'useEffect' is defined but never used. Allowed unused vars must match /^[A-Z_]/u  no-unused-vars
+
+C:\Users\abhay\OneDrive\Desktop\SupplySenseAI\SupplySenseAI\frontend\src\pages\InventoryOptimization.jsx
+  10:11  error  'navigate' is assigned a value but never used. Allowed unused vars must match /^[A-Z_]/u  no-unused-vars
+
+C:\Users\abhay\OneDrive\Desktop\SupplySenseAI\SupplySenseAI\frontend\src\pages\Materials.jsx
+  67:5  error  Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+  65 |
+  66 |   useEffect(() => {
+> 67 |     fetchMaterials();
+     |     ^^^^^^^^^^^^^^ Avoid calling setState() directly within an effect
+  68 |     fetchSuppliers();
+  69 |   }, [fetchMaterials]);
+  70 |  react-hooks/set-state-in-effect
+
+C:\Users\abhay\OneDrive\Desktop\SupplySenseAI\SupplySenseAI\frontend\src\pages\Reports.jsx
+  32:6  warning  React Hook useEffect has a missing dependency: 'fetchReports'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+C:\Users\abhay\OneDrive\Desktop\SupplySenseAI\SupplySenseAI\frontend\src\pages\Settings.jsx
+  170:6  warning  React Hook useEffect has a missing dependency: 'preferences.theme'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+C:\Users\abhay\OneDrive\Desktop\SupplySenseAI\SupplySenseAI\frontend\src\pages\SignUpPage.jsx
+  31:19  error  'response' is assigned a value but never used. Allowed unused vars must match /^[A-Z_]/u  no-unused-vars
+
+C:\Users\abhay\OneDrive\Desktop\SupplySenseAI\SupplySenseAI\frontend\src\pages\Suppliers.jsx
+  33:5  error  Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+  31 |
+  32 |   useEffect(() => {
+> 33 |     fetchSuppliers();
+     |     ^^^^^^^^^^^^^^ Avoid calling setState() directly within an effect
+  34 |   }, []);
+  35 |
+  36 |   const handleInputChange = (e) => {  react-hooks/set-state-in-effect
+
+✖ 7 problems (5 errors, 2 warnings)
+

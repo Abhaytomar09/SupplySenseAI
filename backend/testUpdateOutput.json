@@ -1,0 +1,21 @@
+{
+  "success": true,
+  "data": {
+    "_id": "699d2f15b2178c8005eaeb14",
+    "name": "pranjal",
+    "category": "Tower Components",
+    "currentStock": 5,
+    "unit": "Kilometers",
+    "reorderLevel": 20,
+    "unitCost": 5,
+    "supplier": "699c1be7b7a429ab3721c3f7",
+    "status": "Low Stock",
+    "description": "ok",
+    "autoReorder": true,
+    "minimumReorderQuantity": 100,
+    "createdBy": "507f1f77bcf86cd799439011",
+    "createdAt": "2026-02-24T04:54:45.758Z",
+    "updatedAt": "2026-02-24T04:54:53.678Z",
+    "__v": 0
+  }
+}

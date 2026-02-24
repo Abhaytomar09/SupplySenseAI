@@ -1,33 +1,36 @@
-import { useState } from 'react';
-import { useNavigate, Link, useLocation } from 'react-router-dom';
-import api from '../utils/api';
+import { useState } from "react";
+import { useNavigate, Link, useLocation } from "react-router-dom";
+import api from "../utils/api";
 
 const LoginPage = () => {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
   const navigate = useNavigate();
   const location = useLocation();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError(''); // Clear previous errors
+    setError(""); // Clear previous errors
 
     try {
       // Backend authController expects 'username' field which can be email or username
-      const response = await api.post('/auth/login', { username: username, password });
-      localStorage.setItem('isAuthenticated', 'true');
-      localStorage.setItem('token', response.data.data.token);
-      localStorage.setItem('user', JSON.stringify(response.data.data));
+      const response = await api.post("/auth/login", {
+        username: username,
+        password,
+      });
+      localStorage.setItem("isAuthenticated", "true");
+      localStorage.setItem("token", response.data.data.token);
+      localStorage.setItem("user", JSON.stringify(response.data.data));
 
-      if (response.data.data.role === 'admin') {
-        navigate('/app/dashboard');
+      if (response.data.data.role === "admin") {
+        navigate("/app/dashboard");
       } else {
-        navigate('/app/user-dashboard');
+        navigate("/app/user-dashboard");
       }
     } catch (error) {
-      console.error('Login error:', error);
-      setError(error.response?.data?.message || 'Invalid credentials');
+      console.error("Login error:", error);
+      setError(error.response?.data?.message || "Invalid credentials");
     }
   };
 
@@ -35,8 +38,19 @@ const LoginPage = () => {
     <div className="flex items-center justify-center min-h-screen bg-slate-900">
       <div className="w-full max-w-md p-8 space-y-6 bg-slate-800 rounded-2xl shadow-2xl text-center border border-slate-700">
         <div className="flex justify-center">
-          <svg className="h-10 w-auto text-teal-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75" />
+          <svg
+            className="h-10 w-auto text-teal-400"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            strokeWidth="1.5"
+            stroke="currentColor"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75"
+            />
           </svg>
         </div>
         <h2 className="text-3xl font-bold text-white">SUPPLYSENSEAI</h2>
@@ -56,23 +70,27 @@ const LoginPage = () => {
 
         <form onSubmit={handleSubmit} className="mt-8 space-y-6">
           <div>
-            <label htmlFor="username" className="sr-only">Username</label>
+            <label htmlFor="username" className="sr-only">
+              Username
+            </label>
             <input
               id="username"
               name="username"
-              type="email"
+              type="text"
               required
               value={username}
               onChange={(e) => {
                 setUsername(e.target.value);
-                setError(''); // Clear error when user starts typing
+                setError(""); // Clear error when user starts typing
               }}
               className="relative block w-full px-4 py-3 bg-slate-700 border border-slate-600 placeholder-slate-400 text-white rounded-md focus:outline-none focus:ring-2 focus:ring-teal-400 focus:border-teal-400 sm:text-sm"
               placeholder="Username"
             />
           </div>
           <div>
-            <label htmlFor="password" className="sr-only">Password</label>
+            <label htmlFor="password" className="sr-only">
+              Password
+            </label>
             <input
               id="password"
               name="password"
@@ -81,7 +99,7 @@ const LoginPage = () => {
               value={password}
               onChange={(e) => {
                 setPassword(e.target.value);
-                setError(''); // Clear error when user starts typing
+                setError(""); // Clear error when user starts typing
               }}
               className="relative block w-full px-4 py-3 bg-slate-700 border border-slate-600 placeholder-slate-400 text-white rounded-md focus:outline-none focus:ring-2 focus:ring-teal-400 focus:border-teal-400 sm:text-sm"
               placeholder="Password"
@@ -95,13 +113,15 @@ const LoginPage = () => {
           </button>
 
           <p className="text-sm text-slate-500 mt-4">
-            Don't have an account? <Link to="/signup" className="text-teal-400 hover:underline">Sign up</Link>
+            Don't have an account?{" "}
+            <Link to="/signup" className="text-teal-400 hover:underline">
+              Sign up
+            </Link>
           </p>
         </form>
       </div>
-    </div >
+    </div>
   );
 };
 
 export default LoginPage;
-

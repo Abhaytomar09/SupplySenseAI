@@ -1,12 +1,12 @@
-import { useState, useEffect } from 'react';
-import api from '../utils/api';
+import { useState, useEffect } from "react";
+import api from "../utils/api";
 
 const Reports = () => {
   const [reports, setReports] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [typeFilter, setTypeFilter] = useState('All Types');
-  const [statusFilter, setStatusFilter] = useState('All Status');
+  const [searchTerm, setSearchTerm] = useState("");
+  const [typeFilter, setTypeFilter] = useState("All Types");
+  const [statusFilter, setStatusFilter] = useState("All Status");
   const [showGenerateModal, setShowGenerateModal] = useState(false);
   const [generatingReport, setGeneratingReport] = useState(false);
 
@@ -15,20 +15,21 @@ const Reports = () => {
       setLoading(true);
       const params = {};
       if (searchTerm) params.search = searchTerm;
-      if (typeFilter !== 'All Types') params.type = typeFilter;
-      if (statusFilter !== 'All Status') params.status = statusFilter;
+      if (typeFilter !== "All Types") params.type = typeFilter;
+      if (statusFilter !== "All Status") params.status = statusFilter;
 
-      const response = await api.get('/reports', { params });
+      const response = await api.get("/reports", { params });
       setReports(response.data.data);
       setLoading(false);
     } catch (error) {
-      console.error('Error fetching reports:', error);
+      console.error("Error fetching reports:", error);
       setLoading(false);
     }
   };
 
   useEffect(() => {
     fetchReports();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchTerm, typeFilter, statusFilter]);
 
   const handleGenerateReport = async (reportType) => {
@@ -39,73 +40,74 @@ const Reports = () => {
       let reportData = {
         name: `${reportType} Report - ${new Date().toLocaleDateString()}`,
         type: reportType,
-        status: 'In Progress',
-        description: `Generated ${reportType.toLowerCase()} report`
+        status: "In Progress",
+        description: `Generated ${reportType.toLowerCase()} report`,
       };
 
       // Add specific data based on report type
-      if (reportType === 'Forecast') {
+      if (reportType === "Forecast") {
         // Get forecast data
         try {
-          const forecastResponse = await api.get('/forecasts');
+          const forecastResponse = await api.get("/forecasts");
           reportData.data = {
             forecasts: forecastResponse.data.data,
-            totalForecasts: forecastResponse.data.count
+            totalForecasts: forecastResponse.data.count,
           };
         } catch (error) {
-          console.error('Error fetching forecast data:', error);
+          console.error("Error fetching forecast data:", error);
         }
-      } else if (reportType === 'Inventory') {
+      } else if (reportType === "Inventory") {
         // Get materials data
         try {
-          const materialsResponse = await api.get('/materials');
+          const materialsResponse = await api.get("/materials");
           reportData.data = {
             materials: materialsResponse.data.data,
-            totalMaterials: materialsResponse.data.count
+            totalMaterials: materialsResponse.data.count,
           };
         } catch (error) {
-          console.error('Error fetching materials data:', error);
+          console.error("Error fetching materials data:", error);
         }
-      } else if (reportType === 'Usage') {
+      } else if (reportType === "Usage") {
         // Get combined data
         try {
           const [materialsRes, forecastsRes] = await Promise.all([
-            api.get('/materials'),
-            api.get('/forecasts')
+            api.get("/materials"),
+            api.get("/forecasts"),
           ]);
           reportData.data = {
             materials: materialsRes.data.data,
             forecasts: forecastsRes.data.data,
             summary: {
               totalMaterials: materialsRes.data.count,
-              totalForecasts: forecastsRes.data.count
-            }
+              totalForecasts: forecastsRes.data.count,
+            },
           };
         } catch (error) {
-          console.error('Error fetching usage data:', error);
+          console.error("Error fetching usage data:", error);
         }
       }
 
       // Create the report in database
-      const response = await api.post('/reports', reportData);
+      const response = await api.post("/reports", reportData);
 
       // Simulate processing time
       setTimeout(() => {
         // Update report status to completed
-        api.put(`/reports/${response.data.data._id}`, {
-          status: 'Completed',
-          fileSize: `${(Math.random() * 5 + 1).toFixed(1)} MB`
-        }).then(() => {
-          fetchReports(); // Refresh the list
-        });
+        api
+          .put(`/reports/${response.data.data._id}`, {
+            status: "Completed",
+            fileSize: `${(Math.random() * 5 + 1).toFixed(1)} MB`,
+          })
+          .then(() => {
+            fetchReports(); // Refresh the list
+          });
       }, 2000);
 
       setShowGenerateModal(false);
       fetchReports(); // Refresh immediately to show "In Progress"
-
     } catch (error) {
-      console.error('Error generating report:', error);
-      alert('Failed to generate report');
+      console.error("Error generating report:", error);
+      alert("Failed to generate report");
     } finally {
       setGeneratingReport(false);
     }
@@ -114,38 +116,37 @@ const Reports = () => {
   const handleDownload = async (report) => {
     try {
       // Generate CSV content based on report type
-      let csvContent = '';
+      let csvContent = "";
 
-      if (report.type === 'Forecast' && report.data?.forecasts) {
-        csvContent = 'Name,Type,Budget,Status,Created Date\n';
-        report.data.forecasts.forEach(forecast => {
-          csvContent += `${forecast.projectName || 'N/A'},${forecast.towerType || 'N/A'},${forecast.budget || 0},${forecast.status || 'N/A'},${new Date(forecast.createdAt).toLocaleDateString()}\n`;
+      if (report.type === "Forecast" && report.data?.forecasts) {
+        csvContent = "Name,Type,Budget,Status,Created Date\n";
+        report.data.forecasts.forEach((forecast) => {
+          csvContent += `${forecast.projectName || "N/A"},${forecast.towerType || "N/A"},${forecast.budget || 0},${forecast.status || "N/A"},${new Date(forecast.createdAt).toLocaleDateString()}\n`;
         });
-      } else if (report.type === 'Inventory' && report.data?.materials) {
-        csvContent = 'Name,Category,Stock,Unit,Status,Supplier\n';
-        report.data.materials.forEach(material => {
-          csvContent += `${material.name},${material.category},${material.currentStock},${material.unit},${material.status},${material.supplier?.name || 'N/A'}\n`;
+      } else if (report.type === "Inventory" && report.data?.materials) {
+        csvContent = "Name,Category,Stock,Unit,Status,Supplier\n";
+        report.data.materials.forEach((material) => {
+          csvContent += `${material.name},${material.category},${material.currentStock},${material.unit},${material.status},${material.supplier?.name || "N/A"}\n`;
         });
       } else {
         // Generic data
-        csvContent = 'Report Name,Type,Status,Created Date\n';
+        csvContent = "Report Name,Type,Status,Created Date\n";
         csvContent += `${report.name},${report.type},${report.status},${new Date(report.createdAt).toLocaleDateString()}\n`;
       }
 
       // Create and download file
-      const blob = new Blob([csvContent], { type: 'text/csv' });
+      const blob = new Blob([csvContent], { type: "text/csv" });
       const url = window.URL.createObjectURL(blob);
-      const a = document.createElement('a');
+      const a = document.createElement("a");
       a.href = url;
-      a.download = `${report.name.replace(/[^a-z0-9]/gi, '_').toLowerCase()}.csv`;
+      a.download = `${report.name.replace(/[^a-z0-9]/gi, "_").toLowerCase()}.csv`;
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);
       window.URL.revokeObjectURL(url);
-
     } catch (error) {
-      console.error('Error downloading report:', error);
-      alert('Failed to download report');
+      console.error("Error downloading report:", error);
+      alert("Failed to download report");
     }
   };
 
@@ -157,7 +158,7 @@ Type: ${report.type}
 Status: ${report.status}
 Created: ${new Date(report.createdAt).toLocaleDateString()}
 
-${report.data ? JSON.stringify(report.data, null, 2) : 'No detailed data available'}
+${report.data ? JSON.stringify(report.data, null, 2) : "No detailed data available"}
     `;
 
     alert(details); // For now, show in alert. Could be enhanced to show in modal
@@ -172,7 +173,7 @@ ${report.data ? JSON.stringify(report.data, null, 2) : 'No detailed data availab
       return `${(dataSize / 1024 / 1024).toFixed(1)} MB`;
     }
 
-    return 'N/A';
+    return "N/A";
   };
 
   return (
@@ -224,39 +225,54 @@ ${report.data ? JSON.stringify(report.data, null, 2) : 'No detailed data availab
       ) : reports.length === 0 ? (
         <div className="text-center py-20 bg-white rounded-xl border border-dashed border-slate-300 text-slate-500">
           <p className="text-lg">No reports found.</p>
-          <p className="text-sm">Click "Generate Report" to create a new report.</p>
+          <p className="text-sm">
+            Click "Generate Report" to create a new report.
+          </p>
         </div>
       ) : (
-      <div className="space-y-4">
+        <div className="space-y-4">
           {reports.map((report) => (
-            <div key={report._id} className="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
-            <div className="flex items-center justify-between">
-              <div className="flex-1">
-                <h4 className="text-lg font-semibold text-slate-800">{report.name}</h4>
-                <div className="flex items-center gap-4 mt-2">
-                    <span className={`status-badge status-${report.type.toLowerCase()}`}>
-                    {report.type}
-                  </span>
-                  <span className={`status-badge status-${report.status.toLowerCase().replace(' ', '-')}`}>
-                    {report.status}
-                  </span>
-                    <span className="text-sm text-slate-500">Size: {formatFileSize(report)}</span>
-                </div>
+            <div
+              key={report._id}
+              className="bg-white rounded-xl shadow-sm border border-slate-200 p-6"
+            >
+              <div className="flex items-center justify-between">
+                <div className="flex-1">
+                  <h4 className="text-lg font-semibold text-slate-800">
+                    {report.name}
+                  </h4>
+                  <div className="flex items-center gap-4 mt-2">
+                    <span
+                      className={`status-badge status-${report.type.toLowerCase()}`}
+                    >
+                      {report.type}
+                    </span>
+                    <span
+                      className={`status-badge status-${report.status.toLowerCase().replace(" ", "-")}`}
+                    >
+                      {report.status}
+                    </span>
+                    <span className="text-sm text-slate-500">
+                      Size: {formatFileSize(report)}
+                    </span>
+                  </div>
                   {report.description && (
-                    <p className="text-sm text-slate-600 mt-2">{report.description}</p>
+                    <p className="text-sm text-slate-600 mt-2">
+                      {report.description}
+                    </p>
                   )}
-              </div>
-              <div className="flex items-center gap-4">
+                </div>
+                <div className="flex items-center gap-4">
                   <span className="text-sm text-slate-500">
                     {new Date(report.createdAt).toLocaleDateString()}
                   </span>
                   <button
                     onClick={() => handleDownload(report)}
-                    disabled={report.status !== 'Completed'}
+                    disabled={report.status !== "Completed"}
                     className={`font-medium ${
-                      report.status === 'Completed'
-                        ? 'text-teal-600 hover:text-teal-700'
-                        : 'text-slate-400 cursor-not-allowed'
+                      report.status === "Completed"
+                        ? "text-teal-600 hover:text-teal-700"
+                        : "text-slate-400 cursor-not-allowed"
                     }`}
                   >
                     Download
@@ -267,11 +283,11 @@ ${report.data ? JSON.stringify(report.data, null, 2) : 'No detailed data availab
                   >
                     View
                   </button>
+                </div>
               </div>
             </div>
-          </div>
-        ))}
-      </div>
+          ))}
+        </div>
       )}
 
       {/* Generate Report Modal */}
@@ -279,13 +295,25 @@ ${report.data ? JSON.stringify(report.data, null, 2) : 'No detailed data availab
         <div className="fixed inset-0 bg-slate-900/50 flex items-center justify-center p-4 z-50">
           <div className="bg-white rounded-xl shadow-2xl w-full max-w-md overflow-hidden">
             <div className="px-6 py-4 border-b border-slate-200 flex justify-between items-center bg-slate-50">
-              <h3 className="text-lg font-semibold text-slate-800">Generate New Report</h3>
+              <h3 className="text-lg font-semibold text-slate-800">
+                Generate New Report
+              </h3>
               <button
                 onClick={() => setShowGenerateModal(false)}
                 className="text-slate-400 hover:text-slate-600"
               >
-                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+                <svg
+                  className="w-6 h-6"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M6 18L18 6M6 6l12 12"
+                  />
                 </svg>
               </button>
             </div>
@@ -295,11 +323,20 @@ ${report.data ? JSON.stringify(report.data, null, 2) : 'No detailed data availab
               </p>
               <div className="grid grid-cols-1 gap-3">
                 {[
-                  { type: 'Forecast', desc: 'Analysis of demand forecasting data' },
-                  { type: 'Inventory', desc: 'Current inventory status and materials' },
-                  { type: 'Usage', desc: 'Material usage and procurement analysis' },
-                  { type: 'Review', desc: 'Supplier performance review' },
-                  { type: 'Summary', desc: 'Annual procurement summary' }
+                  {
+                    type: "Forecast",
+                    desc: "Analysis of demand forecasting data",
+                  },
+                  {
+                    type: "Inventory",
+                    desc: "Current inventory status and materials",
+                  },
+                  {
+                    type: "Usage",
+                    desc: "Material usage and procurement analysis",
+                  },
+                  { type: "Review", desc: "Supplier performance review" },
+                  { type: "Summary", desc: "Annual procurement summary" },
                 ].map((option) => (
                   <button
                     key={option.type}
@@ -307,7 +344,9 @@ ${report.data ? JSON.stringify(report.data, null, 2) : 'No detailed data availab
                     disabled={generatingReport}
                     className="text-left p-4 border border-slate-200 rounded-lg hover:border-teal-300 hover:bg-teal-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                   >
-                    <h4 className="font-semibold text-slate-800">{option.type} Report</h4>
+                    <h4 className="font-semibold text-slate-800">
+                      {option.type} Report
+                    </h4>
                     <p className="text-sm text-slate-600">{option.desc}</p>
                   </button>
                 ))}
@@ -315,7 +354,9 @@ ${report.data ? JSON.stringify(report.data, null, 2) : 'No detailed data availab
               {generatingReport && (
                 <div className="text-center py-4">
                   <div className="inline-block animate-spin rounded-full h-6 w-6 border-b-2 border-teal-600"></div>
-                  <p className="text-sm text-slate-600 mt-2">Generating report...</p>
+                  <p className="text-sm text-slate-600 mt-2">
+                    Generating report...
+                  </p>
                 </div>
               )}
             </div>
@@ -327,4 +368,3 @@ ${report.data ? JSON.stringify(report.data, null, 2) : 'No detailed data availab
 };
 
 export default Reports;
-

@@ -1,0 +1,40 @@
+services:
+  # 1. Frontend (React/Vite)
+  - type: web
+    name: supplysenseai-frontend
+    env: static
+    buildCommand: cd frontend && npm install && npm run build
+    staticPublishPath: frontend/dist
+    envVars:
+      - key: VITE_API_BASE_URL
+        value: "https://supplysenseai-backend.onrender.com"
+      - key: VITE_ML_API_URL
+        value: "https://supplysenseai-ml.onrender.com"
+
+  # 2. Backend (Node.js/Express)
+  - type: web
+    name: supplysenseai-backend
+    env: node
+    buildCommand: cd backend && npm install
+    startCommand: cd backend && npm start
+    envVars:
+      - key: PORT
+        value: 5000
+      - key: MONGO_URI
+        sync: false # User needs to set this in Render Dashboard
+      - key: JWT_SECRET
+        sync: false # User needs to set this in Render Dashboard
+      - key: ML_SERVICE_URL
+        value: "https://supplysenseai-ml.onrender.com"
+      - key: FRONTEND_URL
+        value: "https://supplysenseai-frontend.onrender.com"
+
+  # 3. ML Service (Python/Flask)
+  - type: web
+    name: supplysenseai-ml
+    env: python
+    buildCommand: cd ml_service && pip install -r requirements.txt
+    startCommand: cd ml_service && gunicorn app:app -b 0.0.0.0:$PORT
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.0 # specify python version for predictability
