@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import axios from "axios";
+import api from "../utils/api";
 import { formatDate } from "../utils/dateUtils";
 
 const Orders = () => {
@@ -42,7 +43,7 @@ const Orders = () => {
   const fetchOrders = async () => {
     try {
       const token = localStorage.getItem("token");
-      const response = await axios.get("http://localhost:5000/api/orders", {
+      const response = await api.get("/orders", {
         headers: { Authorization: `Bearer ${token}` },
       });
       setOrders(response.data);
@@ -58,8 +59,8 @@ const Orders = () => {
       const config = { headers: { Authorization: `Bearer ${token}` } };
 
       const [matRes, supRes] = await Promise.all([
-        axios.get("http://localhost:5000/api/materials", config),
-        axios.get("http://localhost:5000/api/suppliers", config),
+        api.get("/materials", config),
+        api.get("/suppliers", config),
       ]);
 
       setMaterials(matRes.data.data || matRes.data);
@@ -142,7 +143,7 @@ const Orders = () => {
       const config = { headers: { Authorization: `Bearer ${token}` } };
 
       await axios.post(
-        "http://localhost:5000/api/orders",
+        "/orders",
         {
           ...formData,
           quantity: Number(formData.quantity),
@@ -172,7 +173,7 @@ const Orders = () => {
       const config = { headers: { Authorization: `Bearer ${token}` } };
 
       await axios.put(
-        `http://localhost:5000/api/orders/${selectedOrder._id}/status`,
+        `/orders/${selectedOrder._id}/status`,
         { status: "Received" },
         config,
       );
@@ -192,7 +193,7 @@ const Orders = () => {
       const config = { headers: { Authorization: `Bearer ${token}` } };
 
       await axios.put(
-        `http://localhost:5000/api/orders/${orderId}/status`,
+        `/orders/${orderId}/status`,
         // Status can be advanced from Pending -> Ordered by Manager/Admin
         { status: "Ordered" },
         config,
