@@ -1,3 +1,5 @@
+#livelink
+https://supplysenseai-frontend.onrender.com/
 # SupplySenseAI
 
 SupplySenseAI is an intelligent inventory and supply chain management platform powered by Artificial Intelligence. It leverages Machine Learning to provide accurate demand forecasting, inventory optimization, and data-driven insights.
