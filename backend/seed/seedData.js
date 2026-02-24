@@ -233,7 +233,7 @@ async function seed() {
   console.log("\n===== SupplySenseAI Data Seeder =====");
 
   try {
-    await mongoose.connect(DB_URI);
+    await mongoose.connect(MONGODB_URI);
     console.log("✅ MongoDB Connected");
 
     // Find an admin user to attach orders to
