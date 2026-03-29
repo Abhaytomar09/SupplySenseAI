@@ -6,6 +6,7 @@ SupplySenseAI is an intelligent inventory and supply chain management platform p
 
 ## Features
 
+
 - **🛡️ Secure Access:** Role-based authentication system (Admin, Manager, User) using JWT.
 - **📦 Inventory Management:** Comprehensive tracking of materials, stock levels, and supplier data.
 - **🤖 AI Demand Forecasting:** Uses Machine Learning algorithms (Random Forest Regressor) to predict future material demand based on historical data.
